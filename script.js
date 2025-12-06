@@ -1,5 +1,4 @@
 //your JS code here.
-
 // Do not change code below this line
 // This code will just display the questions to the screen
 const questions = [
@@ -30,7 +29,18 @@ const questions = [
   },
 ];
 
-// Display the quiz questions and choices
+const questionsElement = document.getElementById("questions");
+const submitButton = document.getElementById("submit");
+const scoreElement = document.getElementById("score");
+let userAnswers = sessionStorage.getItem("progress")
+  ? JSON.parse(sessionStorage.getItem("progress"))
+  : Array(questions.length).fill(null);
+
+let lastScore = localStorage.getItem("score");
+if (lastScore !== null) {
+  scoreElement.textContent = `Your score is ${lastScore} out of ${questions.length}.`;
+}
+
 function renderQuestions() {
   for (let i = 0; i < questions.length; i++) {
     const question = questions[i];
@@ -53,4 +63,19 @@ function renderQuestions() {
     questionsElement.appendChild(questionElement);
   }
 }
+
+submitButton.addEventListener("click", () => {
+  let score = 0;
+
+  for (let i = 0; i < questions.length; i++) {
+    if (userAnswers[i] === questions[i].answer) {
+      score++;
+    }
+  }
+
+  scoreElement.textContent = `Your score is ${score} out of ${questions.length}.`;
+  localStorage.setItem("score", score);
+});
+
 renderQuestions();
+
